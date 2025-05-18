@@ -8,7 +8,7 @@ import cv2
 session = ort.InferenceSession("best (1).onnx")
 
 # Define preprocessing function
-def preprocess_image(image: Image.Image, target_size=(224, 224)):
+def preprocess_image(image: Image.Image, target_size=(640, 640)):
     image = image.convert("RGB")
     image = image.resize(target_size)
     img_array = np.array(image).astype(np.float32) / 255.0  # Normalize
