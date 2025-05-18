@@ -31,20 +31,29 @@ if uploaded_file is not None:
     # Get model input/output names
     input_name = session.get_inputs()[0].name
     output_name = session.get_outputs()[0].name
-
-    # Run inference
+    
+    # Run inference 
     outputs = session.run([output_name], {input_name: input_data})
     detections = outputs[0]  # shape: (1, 8, 8400)
 
-    # YOLO-style: filter detections by confidence threshold
-    confidence_threshold = 0.5
-    detections = np.squeeze(detections)  # shape becomes (8, 8400)
+    # Remove batch dimension
+    detections = np.squeeze(detections)  # shape: (8, 8400)
 
-    # Assuming class confidence is in 5th position (index 4 or 5)
-    scores = detections[4]  # Adjust if needed
-    high_conf_indices = np.where(scores > confidence_threshold)[0]
+    # Transpose to (8400, 8) so each row is a detection
+    detections = detections.T
 
-    if len(high_conf_indices) > 0:
-        st.success("Prediction: Leak Detected")
-    else:
-        st.info("Prediction: No Leak Detected")
+    # Confidence threshold
+    conf_threshold = 0.25  # You can lower this if your model is under-confident
+
+    # Objectness * class_1 score (assuming class 1 is "leak")
+    objectness = detections[:, 4]
+    class_1_score = detections[:, 6]  # Index 6 = second class ("leak")
+    final_conf = objectness * class_1_score
+
+    # Find detections above threshold
+    leak_detections = detections[final_conf > conf_threshold]
+
+if len(leak_detections) > 0:
+    st.success("Prediction: Leak Detected")
+else:
+    st.info("Prediction: No Leak Detected")
