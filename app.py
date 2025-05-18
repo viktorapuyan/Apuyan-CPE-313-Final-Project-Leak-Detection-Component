@@ -2,7 +2,6 @@ import streamlit as st
 import numpy as np
 import onnxruntime as ort
 from PIL import Image
-import cv2
 
 # Load the ONNX model
 session = ort.InferenceSession("best (1).onnx")
@@ -12,8 +11,8 @@ def preprocess_image(image: Image.Image, target_size=(640, 640)):
     image = image.convert("RGB")
     image = image.resize(target_size)
     img_array = np.array(image).astype(np.float32) / 255.0  # Normalize
-    img_array = np.transpose(img_array, (2, 0, 1))  # Change to (C, H, W)
-    img_array = np.expand_dims(img_array, axis=0)  # Add batch dimension
+    img_array = np.transpose(img_array, (2, 0, 1))  # Convert to (C, H, W)
+    img_array = np.expand_dims(img_array, axis=0)   # Add batch dimension
     return img_array
 
 # Streamlit UI
@@ -34,10 +33,16 @@ if uploaded_file is not None:
     output_name = session.get_outputs()[0].name
 
     # Run inference
-    result = session.run([output_name], {input_name: input_data})[0]
+    outputs = session.run([output_name], {input_name: input_data})
+    result = outputs[0]  # shape: (1, 2) or (1, 1) depending on model
 
-    # Assuming binary classification (0 = no leak, 1 = leak)
-    prediction = np.argmax(result, axis=1)[0]
+    # Convert prediction to a readable label
+    if result.shape[1] == 2:
+        # Assume softmax or logits (2-class)
+        prediction = np.argmax(result, axis=1)[0]
+    else:
+        # Assume sigmoid output (single value)
+        prediction = 1 if result[0][0] > 0.5 else 0
+
     label = "Leak" if prediction == 1 else "No Leak"
-
     st.subheader(f"Prediction: {label}")
