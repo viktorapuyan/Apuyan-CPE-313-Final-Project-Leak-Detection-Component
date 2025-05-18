@@ -36,13 +36,22 @@ if uploaded_file is not None:
     outputs = session.run([output_name], {input_name: input_data})
     result = outputs[0]
 
-    # Convert prediction to a readable label
-    if result.shape[1] == 2:
-        # Softmax or logits with 2 outputs
+    # Print debug info
+    st.write("Model Output:", result)
+    st.write("Output Shape:", result.shape)
+
+    # Handle output types
+    if result.ndim == 2 and result.shape[1] == 2:
+        # e.g., [[0.1, 0.9]] → Softmax or logits
         prediction = int(np.argmax(result, axis=1)[0])
+    elif result.ndim == 2 and result.shape[1] == 1:
+        # e.g., [[0.87]] → sigmoid output
+        prediction = int(result[0][0] > 0.5)
     else:
-        # Sigmoid with one output
-        prediction = 1 if result[0][0].item() > 0.5 else 0
-        
-    label = "Leak" if prediction == 1 else "No Leak"
-    st.subheader(f"Prediction: {label}")
+        st.error("Unexpected model output shape. Check your model's output layer.")
+        st.stop()
+
+# Display result
+label = "Leak" if prediction == 1 else "No Leak"
+st.subheader(f"Prediction: {label}")
+
