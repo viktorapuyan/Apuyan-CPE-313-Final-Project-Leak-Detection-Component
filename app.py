@@ -6,7 +6,7 @@ from PIL import Image
 # Load YOLO ONNX model
 @st.cache_resource
 def load_model():
-    return ort.InferenceSession("best.onnx")
+    return ort.InferenceSession("best (1).onnx")
 
 session = load_model()
 
