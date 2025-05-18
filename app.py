@@ -12,7 +12,7 @@ def load_model():
 model = load_model()
 
 # Streamlit UI
-st.title("🚨 Pipeline Leak Detection")
+st.title("Pipeline Leak Detection")
 st.write("Upload a pipeline image to detect if there's a leak.")
 
 uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
@@ -37,8 +37,8 @@ if uploaded_file:
                 break
 
         if leak_detected:
-            st.success("✅ Leak Detected!")
+            st.success("Leak Detected!")
         else:
-            st.info("❌ No Leak Detected.")
+            st.info("No Leak Detected")
     else:
-        st.info("❌ No objects detected.")
+        st.info("No objects detected!")
