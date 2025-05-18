@@ -34,15 +34,15 @@ if uploaded_file is not None:
 
     # Run inference
     outputs = session.run([output_name], {input_name: input_data})
-    result = outputs[0]  # shape: (1, 2) or (1, 1) depending on model
+    result = outputs[0]
 
     # Convert prediction to a readable label
     if result.shape[1] == 2:
-        # Assume softmax or logits (2-class)
-        prediction = np.argmax(result, axis=1)[0]
+        # Softmax or logits with 2 outputs
+        prediction = int(np.argmax(result, axis=1)[0])
     else:
-        # Assume sigmoid output (single value)
-        prediction = 1 if float(result[0][0]) > 0.5 else 0
-
+        # Sigmoid with one output
+        prediction = 1 if result[0][0].item() > 0.5 else 0
+        
     label = "Leak" if prediction == 1 else "No Leak"
     st.subheader(f"Prediction: {label}")
