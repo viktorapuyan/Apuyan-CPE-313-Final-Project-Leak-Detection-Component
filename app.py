@@ -42,7 +42,7 @@ if uploaded_file is not None:
         prediction = np.argmax(result, axis=1)[0]
     else:
         # Assume sigmoid output (single value)
-        prediction = 1 if result[0][0] > 0.5 else 0
+        prediction = 1 if float(result[0][0]) > 0.5 else 0
 
     label = "Leak" if prediction == 1 else "No Leak"
     st.subheader(f"Prediction: {label}")
