@@ -40,5 +40,4 @@ if uploaded_file:
             st.success("Leak Detected!")
         else:
             st.info("No Leak Detected")
-    else:
-        st.info("No objects detected!")
+
