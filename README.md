@@ -66,28 +66,6 @@ Try the deployed app here:
 - Python 3.8 or higher
 - pip
 
-### Installation
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/viktorapuyan/Apuyan-CPE-313-Final-Project-Leak-Detection-Component.git
-   cd Apuyan-CPE-313-Final-Project-Leak-Detection-Component
-   ```
-
-2. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Run the app:**
-   ```bash
-   streamlit run app.py
-   ```
-
-4. Open your browser and navigate to `http://localhost:8501`.
-
----
-
 ## 🖼️ Sample Images
 
 Sample pipeline images for testing are available in the `images/` folder:
@@ -98,6 +76,6 @@ Sample pipeline images for testing are available in the `images/` folder:
 
 ## 👤 Author
 
-**Viktor Adornado Apuyan**  
+**Viktor Angelo B. Apuyan**  
 CPE 313 — Final Project  
 Deep Learning-Based Pipeline Leak Detection
